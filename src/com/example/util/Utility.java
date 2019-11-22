@@ -17,7 +17,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-
+//提供此工具类来解析和处理服务器返回的数据
 public class Utility {
 
 	/**
@@ -25,18 +25,21 @@ public class Utility {
 	 */
 	public synchronized static boolean handleProvincesResponse(
 			CoolWeatherDB coolWeatherDB, String response) {
+		//isEmpty用于判断""或null
 		if (!TextUtils.isEmpty(response)) {
-			String[] allProvinces = response.split(",");
+			String[] allProvinces = response.split(",");//将response字符串中的内容以逗号为界限分开存储到allProvince数组中
 			if (allProvinces != null && allProvinces.length > 0) {
 				for (String p : allProvinces) {
+					//split分离,'\\|'传给正则就是"\|",表示对|进行转义，不作为特殊字符使用
 					String[] array = p.split("\\|");
 					Province province = new Province();
+					//数据格式为"代号|城市",故array[0]为代号
 					province.setProvinceCode(array[0]);
 					province.setProvinceName(array[1]);
 					// 将解析出来的数据存储到Province表
 					coolWeatherDB.saveProvince(province);
 				}
-				return true;
+				return true;//成功解析
 			}
 		}
 		return false;
@@ -111,6 +114,7 @@ public class Utility {
 	/**
 	 * 将解析出来的数据存储到本地sharedpreferences中
 	 */
+	//保存天气信息
 	public static void saveWeatherInfo(Context context, String cityName,
 			String weatherCode, String temp1, String temp2, String weatherDesp,
 			String publishTime) {
